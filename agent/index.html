@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Agent Screen</title>
+    <link
+      rel="stylesheet"
+      href="https://downloads.momentum-ui.com/@momentum-ui/core/css/momentum-ui.css"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <div class="container" id="loginContainer" style="display: initial">
+      <div class="row" style="margin: auto;">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+          <div class="card card-signin my-5">
+            <div class="card-body">
+              <h5 class="card-title text-center">Sign In</h5>
+              <form class="form-signin" id="credentials">
+                <div class="form-label-group">
+                  <input
+                    id="access-token"
+                    name="accessToken"
+                    placeholder="Access Token"
+                    type="text"
+                    class="form-control"
+                  />
+                </div>
+                <input
+                  class="btn btn-lg btn-primary btn-block text-uppercase"
+                  id="connect"
+                  title="Connect"
+                  type="submit"
+                  value="connect"
+                />
+                <br />
+                <p class="text-center" id="connection-status">Disconnected</p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <main>
+      <div
+        class="col-xl-12 mx-auto"
+        id="uselessContainer"
+        style="display: none"
+      >
+        <div class="card my-5">
+          <div class="container" id="callStatus">
+            <table id="call-status">
+              <tbody>
+                <tr>
+                  <td id="call-status-local"></td>
+                  <td id="screenshare-tracks"></td>
+                </tr>
+                <tr>
+                  <td id="call-status-remote"></td>
+                  <td id="screenshare-tracks-remote"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="container">
+            <form id="dialer">
+              <div class="form-label-group" id="dialInput">
+                <input
+                  id="invitee"
+                  name="invitee"
+                  placeholder="Email Address"
+                  type="text"
+                  class="form-control"
+                  required
+                  autofocus
+                />
+              </div>
+              <div id="dial" style="display: none">
+                <input class="btn btn-primary" type="submit" value="Dial" />
+              </div>
+            </form>
+            <div class="collapse" id="hiddenFunctions">
+              <div
+                class="container"
+                id="shareScreenButton"
+                style="display: initial"
+              >
+                <input
+                  class="btn btn-primary"
+                  id="share-screen"
+                  title="share screen"
+                  type="submit"
+                  value="Share Screen"
+                />
+              </div>
+              <div
+                class="container"
+                id="stopScreenShareButton"
+                style="display: none"
+              >
+                <input
+                  class="btn btn-primary"
+                  id="stop-screen-share"
+                  title="stop screen share"
+                  type="submit"
+                  value="Stop Screen Share"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-12 mx-auto" id="awaitingCall" style="display: none">
+        <div class="jumbotron jumbotron-fluid">
+          <h1 class="display-4">Welcome</h1>
+          <span>Awaiting incoming call.</span>
+        </div>
+      </div>
+      <div class="col-xl-12 mx-auto" id="callInterface" style="display: none">
+        <div id="video-streams">
+          <div style="display: none">
+            <video
+              style="max-width: 250px; max-height: 250px;"
+              id="self-view"
+              muted
+              autoplay
+            ></video>
+          </div>
+          <div style="display: none">
+            <video
+              style="max-width: 250px; max-height: 250px;"
+              id="self-screen"
+              muted
+              autoplay
+            ></video>
+          </div>
+          <div class="row w-100">
+            <!-- Client Video -->
+            <div class="col-sm-3 col-md-2">
+              <div class="card">
+                <video id="remote-view-video" autoplay></video>
+                <audio id="remote-view-audio" autoplay></audio>
+              </div>
+            </div>
+            <!-- Client Share Screen -->
+            <div class="col-sm-8 col-md-9">
+              <div class="card" id="drawCanvas">
+                <div class="cursor cursor--small"></div>
+                <video id="remote-screen" muted autoplay></video>
+                <canvas class="whiteboard" id="temp-canvas"></canvas>
+                <canvas class="whiteboard" id="overlay"></canvas>
+                <canvas
+                  class="cursor cursor--canvas"
+                  id="cursor-canvas"
+                ></canvas>
+              </div>
+              <div id="hangup">
+                <button class="btn btn-circle btn-danger" type="submit">
+                  <i
+                    class="fa fa-times fa-2x"
+                    style="vertical-align: middle"
+                  ></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="btn-group-vertical tools" role="group">
+                <button type="button" class="btn btn-light tool" id="tool-pen">
+                  <i class="fas fa-pen non-click"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light tool"
+                  id="tool-circle"
+                >
+                  <i class="far fa-circle non-click"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light tool"
+                  id="tool-eraser"
+                >
+                  <i class="fas fa-eraser non-click"></i>
+                </button>
+              </div>
+              <br />
+              <div class="btn-group-vertical colors" role="group">
+                  <button
+                  type="button"
+                  class="btn btn-light color black"
+                  id="color-black"
+                >
+                  <i class="fas fa-circle non-click"></i>
+                <button
+                  type="button"
+                  class="btn btn-light color blue"
+                  id="color-blue"
+                >
+                  <i class="fas fa-circle non-click"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light color red"
+                  id="color-red"
+                >
+                  <i class="fas fa-circle non-click"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light color green"
+                  id="color-green"
+                >
+                  <i class="fas fa-circle non-click"></i>
+                </button>
+              </div>
+              <br />
+              <div class="btn-group-vertical utilities" role="group">
+                <button
+                  type="button"
+                  class="btn btn-light utility clear"
+                  id="clear"
+                >
+                  <i class="fas fa-trash non-click"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light utility undo"
+                  id="undo"
+                >
+                  <i class="fas fa-undo non-click"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light utility redo"
+                  id="redo"
+                >
+                  <i class="fas fa-redo non-click"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.0/paper-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <!-- index.js is your application code -->
+    <script src="js/index.js"></script>
+
+  </body>
+</html>

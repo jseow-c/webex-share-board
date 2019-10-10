@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sample: Local Screensharing</title>
+    <link
+      rel="stylesheet"
+      href="https://downloads.momentum-ui.com/@momentum-ui/core/css/momentum-ui.css"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <main>
+      <div
+        class="col-xl-12 mx-auto"
+        id="uselessContainer"
+        style="display: none"
+      >
+        <div class="card my-5">
+          <div class="container" id="callStatus">
+            <table id="call-status">
+              <tbody>
+                <tr>
+                  <td id="call-status-local"></td>
+                  <td id="screenshare-tracks"></td>
+                </tr>
+                <tr>
+                  <td id="call-status-remote"></td>
+                  <td id="screenshare-tracks-remote"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="container" id="helpInterface" style="display: initial">
+        <div class="row w-100">
+          <div
+            class="col-xs-8 col-sm-8 col-md-7 col-lg-6 col-xl-4 mx-auto"
+            style="display: none"
+          >
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">Sign In</h5>
+                <form class="form-signin" id="credentials">
+                  <div class="form-label-group">
+                    <input
+                      id="access-token"
+                      name="accessToken"
+                      placeholder="Access Token"
+                      type="text"
+                      class="form-control"
+                      require
+                      autofocus
+                    />
+                  </div>
+                  <input
+                    class="btn btn-lg btn-primary btn-block text-uppercase"
+                    id="connect"
+                    title="Connect"
+                    type="submit"
+                    value="connect"
+                  />
+                  <br />
+                  <p
+                    style="display: none"
+                    class="text-center"
+                    id="connection-status"
+                  >
+                    Disconnected
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container" id="fillerContainer"></div>
+      </div>
+      <div class="container" id="dialContainer" style="display: initial">
+        <h1 class="display-4">Welcome to the SIA Help Desk</h1>
+        <br />
+        <h5>Please press the button below to call for help</h5>
+        <form id="dialer">
+          <div class="form-label-group" id="dialInput">
+            <input
+              id="invitee"
+              name="invitee"
+              placeholder="Email Address"
+              type="text"
+              class="form-control"
+              required
+              autofocus
+            />
+          </div>
+          <div id="dial" style="display: none">
+            <button class="btn btn-circle btn-light" type="submit">
+              <i class="fas fa-phone" id="dial" style="display: initial"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-xl-12 mx-auto" id="callInterface" style="display: none">
+        <div class="card card-signin my-5" id="videoBox">
+          <div class="card-body">
+            <div id="video-streams">
+              <div style="display: none">
+                <video
+                  style="max-width: 250px; max-height: 250px;"
+                  id="self-view"
+                  muted
+                  autoplay
+                ></video>
+              </div>
+              <div style="display: none">
+                <video
+                  style="max-width: 250px; max-height: 250px;"
+                  id="self-screen"
+                  muted
+                  autoplay
+                ></video>
+              </div>
+              <div style="display: none">
+                <video id="remote-screen" muted autoplay></video>
+              </div>
+              <div class="card">
+                <video id="remote-view-video" autoplay></video>
+                <audio id="remote-view-audio" autoplay></audio>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="hangup" class="btn btn-circle btn-danger" type="submit">
+          <i class="fas fa-phone-slash"></i>
+        </button>
+        <button
+          style="display: initial"
+          class="btn btn-circle btn-secondary"
+          id="share-screen"
+          type="submit"
+        >
+          <i class="fas fa-share-square"></i>
+        </button>
+        <button
+          style="display: none"
+          class="btn btn-circle btn-secondary"
+          id="stop-screen-share"
+          type="submit"
+        >
+          <i class="far fa-stop-circle"></i>
+        </button>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

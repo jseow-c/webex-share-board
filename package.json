@@ -1,0 +1,30 @@
+{
+  "name": "whiteboard",
+  "version": "1.0.0",
+  "description": "A simple collaborative whiteboard using socket.io",
+  "main": "index.js",
+  "keywords": [
+    "socket.io",
+    "whiteboard"
+  ],
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "4.9.x",
+    "jsonwebtoken": "^8.5.1",
+    "parcel-bundler": "^1.12.3",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "webex": "^1.79.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "agent": "./node_modules/.bin/parcel ./agent/interface.html",
+    "client": "./node_modules/.bin/parcel ./client/index.html"
+  },
+  "author": "Damien Arrachequesne",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@www-github.cisco.com:jseow/sia-whiteboard.git"
+  }
+}
