@@ -118,12 +118,13 @@ div {
 
 #dialContainer {
   color: #fff;
-  margin-top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #dialer {
-  margin: 20%;
-  margin-top: 50px;
+  width: 600px;
 }
 
 #callInterface {
@@ -137,4 +138,16 @@ div {
 #videoBox {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+#remote-view-video {
+  height: calc(95vh - 150px);
 }

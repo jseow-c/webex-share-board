@@ -1,6 +1,6 @@
 const Webex = require("webex");
 
-var webex;
+var webex, activeMeeting;
 
 var jwt = require("jsonwebtoken");
 
@@ -28,7 +28,6 @@ axios({
   headers: { Authorization: `Bearer ${token}` }
 }).then(res => {
   setResToken = res.data.token;
-  // console.log(setResToken);
   document.getElementById("dial").style.display = "initial";
 });
 
@@ -77,11 +76,11 @@ function connect() {
           // This is just a little helper for our selenium tests and doesn't
           // really matter for the example
           document.body.classList.add("listening");
-          document.getElementById("connection-status").innerHTML = "Connected";
+          // document.getElementById("connection-status").innerHTML = "Connected";
           // Our device is now connected
           console.log("Hi we are connected");
-          document.getElementById("helpInterface").style.display = "none";
-          document.getElementById("dialContainer").style.display = "initial";
+          // document.getElementById("helpInterface").style.display = "none";
+          document.getElementById("dialContainer").style.display = "flex";
           resolve();
         })
         // This is a terrible way to handle errors, but anything more specific is
@@ -152,7 +151,7 @@ function bindMeetingEvents(meeting) {
       document.getElementById("self-screen").srcObject = null;
     }
     document.getElementById("callInterface").style.display = "none";
-    document.getElementById("dialContainer").style.display = "initial";
+    document.getElementById("dialContainer").style.display = "flex";
   });
 
   // Handle share specific events
@@ -161,28 +160,6 @@ function bindMeetingEvents(meeting) {
   });
   meeting.on("meeting:stoppedSharingLocal", () => {
     document.getElementById("screenshare-tracks").innerHTML = "STOPPED";
-  });
-
-  // Update participant info
-  meeting.members.on("members:update", delta => {
-    const { full: membersData } = delta;
-    const memberIDs = Object.keys(membersData);
-
-    memberIDs.forEach(memberID => {
-      const memberObject = membersData[memberID];
-
-      // Devices are listed in the memberships object.
-      // We are not concerned with them in this demo
-      if (memberObject.isUser) {
-        if (memberObject.isSelf) {
-          document.getElementById("call-status-local").innerHTML =
-            memberObject.status;
-        } else {
-          document.getElementById("call-status-remote").innerHTML =
-            memberObject.status;
-        }
-      }
-    });
   });
 
   console.log("REACHED HERE!!!!!");
@@ -326,4 +303,19 @@ document.getElementById("dialer").addEventListener("submit", event => {
 
       // Implement error handling here
     });
+});
+
+// Unload the Webex Call if user leave the screen -- not working
+window.addEventListener("unload", function(event) {
+  if (activeMeeting) {
+    activeMeeting.leave();
+  }
+});
+
+window.addEventListener("beforeunload", function(event) {
+  console.log("hi");
+  if (activeMeeting) {
+    activeMeeting.leave();
+  }
+  return "We ended your meeting";
 });

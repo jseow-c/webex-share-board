@@ -3,7 +3,9 @@
 import io from "socket.io-client";
 
 // VARIABLE DECLARATION
-const socket = io.connect("10.68.46.144:8118");
+const socket = io.connect("https://10.138.224.224:8118", {
+  rejectUnauthorized: false
+});
 // canvas
 const tempCanvas = document.getElementById("temp-canvas");
 const canvas = document.getElementById("overlay");

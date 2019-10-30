@@ -1,9 +1,27 @@
 const express = require("express");
+const fs = require("fs");
+var cors = require("cors");
+
+// Start ExpressJS Web Server
 const app = express();
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
+app.use(cors());
+
+// Get SSL files for Web Server
+const options = {
+  key: fs.readFileSync("./ssl/privatekey.key"),
+  cert: fs.readFileSync("./ssl/certificate.crt")
+};
+
+// Start HTTPS Server and attach ExpressJS into it
+const https = require("https");
+const secureServer = https.createServer(options, app);
+
+//  Ledge IO Server and set Origins
+const io = require("socket.io")(secureServer);
+io.set("origins", "*:*");
 const port = process.env.PORT || 8118;
 
+//  Socket Callback
 function onConnection(socket) {
   console.log("connected");
   socket.on("drawTempLine", data => {
@@ -35,6 +53,8 @@ function onConnection(socket) {
   });
 }
 
+// Ledge CB to Socket
 io.on("connection", onConnection);
 
-http.listen(port, () => console.log("listening on port " + port));
+// Allow Server to Listen
+secureServer.listen(port, () => console.log("listening on port " + port));

@@ -74,7 +74,9 @@ let actions = [];
 
 // SOCKET CONNECT
 export function socketConnect() {
-  socket = io.connect("http://10.68.46.144:8118");
+  socket = io.connect("https://10.138.224.224:8118", {
+    rejectUnauthorized: false
+  });
 
   socket.on("emitWindowSize", data => {
     const { clientWindowWidth, clientWindowHeight } = data;
